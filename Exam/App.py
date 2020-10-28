@@ -16,9 +16,8 @@ app.secret_key = "mysecretkey"
 @app.route('/')
 def Index():
 	cur = mysql.connection.cursor()
-	cur.execute("SELECT * FROM zombies")
+	cur.execute("SELECT id, nombre, TIMESTAMP(date_n) AS date , status FROM zombies GROUP BY id, nombre ORDER BY date DESC")
 	data = cur.fetchall()
-	print(data)
 	return render_template('index.html', contacts = data)
 
 @app.route('/add_contact', methods=['POST'])
@@ -26,7 +25,6 @@ def add_contact():
 	if request.method == 'POST':
 		fullname = request.form['fullname']
 		status = request.form['status']
-		#email = request.form['email']
 		cur = mysql.connection.cursor()
 		cur.execute("INSERT INTO zombies (nombre, date_n, status) VALUES (%s, CURRENT_TIMESTAMP(), %s)", (fullname,status))
 		mysql.connection.commit()
@@ -40,12 +38,18 @@ def get_contact(id):
 	data = cur.fetchall()
 	return render_template('edit-contact.html', contact = data[0])
 
+@app.route('/zombie_info/<string:name>')
+def zombie_info(name):
+	cur = mysql.connection.cursor()
+	cur.execute("SELECT id, nombre, TIMESTAMP(date_n) AS date , status FROM zombies WHERE nombre = %s ORDER BY date DESC", [name])
+	data = cur.fetchall()
+	return render_template('zombie_info.html', contact = data)
+
 @app.route('/update/<id>', methods = ['POST'])
 def update_contact(id):
 	if request.method == 'POST':
 		fullname = request.form['fullname']
 		status = request.form['status']
-		#email = request.form['email']
 		cur = mysql.connection.cursor()
 		cur.execute("INSERT INTO zombies (nombre, date_n, status) VALUES (%s, CURRENT_TIMESTAMP(), %s)", (fullname,status))
 		mysql.connection.commit()
