@@ -1,0 +1,38 @@
+
+{% extends 'layout.html' %}
+
+{% block body %}
+	<div class="col-md-4 offset-md-4">
+		<div class="card card-body">
+			<form action="/update/{{contact.0}}" method="POST">
+				
+				<div class="form-group">
+					<input type="text" name="fullname" placeholder="fullname" value="{{contact.1}}" class="form-control">	
+				</div>
+
+				<div class="form-group">
+					<input type="text" name="date" placeholder="Fecha" value="{{contact.2}}" class="form-control">
+				</div>
+
+				<div class="form-group mb-3">
+					  <select class="custom-select" name="status" value="{{contact.3}}">
+					    <option selected value="Infeccion">Infeccion</option>
+					    <option value="desorientación">desorientación</option>
+					    <option value="violencia">violencia</option>
+					    <option value="desmayo">desmayo</option>
+					    <option value="transformación">transformación</option>
+					  </select>
+				</div>
+
+				</div>
+				<div class="form-group">
+					<button class="btn btn-success btn-block" type="submit">
+					Actualizar
+					</button>
+				</div>
+				
+			</form>
+		</div>
+	</div>
+
+{% endblock %}
